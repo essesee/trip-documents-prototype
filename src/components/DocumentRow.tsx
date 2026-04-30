@@ -164,7 +164,9 @@ export function DocumentRow({
               Resend acknowledgment
             </Menu.Item>
           )}
-          <Menu.Item onClick={() => onRequestReassign(doc)}>Reassign scope</Menu.Item>
+          {!doc.systemGenerated && (
+            <Menu.Item onClick={() => onRequestReassign(doc)}>Reassign scope</Menu.Item>
+          )}
           {doc.deletableByAgent && (
             <Menu.Item color="red" leftSection={<IconTrash size={14} />} onClick={() => deleteDocument(doc.id)}>
               Delete
