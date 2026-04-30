@@ -1,7 +1,8 @@
-import { Box, Button, Group, Menu, Text } from '@mantine/core';
-import { IconChevronDown, IconFilePlus, IconLuggage, IconUpload } from '@tabler/icons-react';
+import { Box, Button, Group, Text } from '@mantine/core';
+import { IconFilePlus, IconLuggage, IconUpload } from '@tabler/icons-react';
 import { useState } from 'react';
 import {
+  resendAck,
   simulateNewBooking,
   useDocumentStore,
 } from '../state/documentStore';
@@ -11,7 +12,6 @@ import { ReAckBanner } from './ReAckBanner';
 import { ResendAckModal } from './ResendAckModal';
 import { SendForAckModal } from './SendForAckModal';
 import { UploadModal } from './UploadModal';
-import { resendAck } from '../state/documentStore';
 
 export function AgentDocumentsCard() {
   const trip = useDocumentStore((s) => s.trip);
@@ -49,6 +49,14 @@ export function AgentDocumentsCard() {
             </Text>
           </Group>
           <Group gap="xs">
+            <Button
+              variant="white"
+              color="yellow"
+              leftSection={<IconLuggage size={16} />}
+              onClick={() => simulateNewBooking()}
+            >
+              What if a booking is added?
+            </Button>
             <Button variant="white" color="blue" leftSection={<IconFilePlus size={16} />}>
               Create Proposal
             </Button>
@@ -59,24 +67,6 @@ export function AgentDocumentsCard() {
             >
               Upload
             </Button>
-            <Menu position="bottom-end" withArrow shadow="md">
-              <Menu.Target>
-                <Button variant="white" color="blue" px={8} aria-label="More actions">
-                  <IconChevronDown size={16} />
-                </Button>
-              </Menu.Target>
-              <Menu.Dropdown>
-                <Menu.Label>Dev affordances</Menu.Label>
-                <Menu.Item
-                  leftSection={<IconLuggage size={14} />}
-                  onClick={() => simulateNewBooking()}
-                >
-                  Simulate new booking added ({bookings.length} on trip)
-                </Menu.Item>
-                <Menu.Divider />
-                <Menu.Item disabled>Reassign scope on selected</Menu.Item>
-              </Menu.Dropdown>
-            </Menu>
           </Group>
         </Group>
 

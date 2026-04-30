@@ -28,6 +28,24 @@ function subscribe(l: () => void) {
   };
 }
 
+function formatNow(): string {
+  return new Date().toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+}
+
+function formatDateOnly(): string {
+  return new Date().toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+}
+
 export function useDocumentStore<T>(selector: (s: DocumentState) => T): T {
   return useSyncExternalStore(
     subscribe,
@@ -66,6 +84,13 @@ export function toggleNeedsAck(id: string) {
   const doc = getDocument(id);
   if (!doc) return;
   const next = !doc.needsAcknowledgment;
+  if (!next) {
+    const existing = ackTimers.get(id);
+    if (existing) {
+      clearTimeout(existing);
+      ackTimers.delete(id);
+    }
+  }
   patchDocument(id, {
     needsAcknowledgment: next,
     acknowledgmentStatus: next ? doc.acknowledgmentStatus : 'not_requested',
@@ -82,13 +107,7 @@ function scheduleSimulatedAck(id: string) {
     if (!doc || doc.acknowledgmentStatus !== 'sent') return;
     patchDocument(id, {
       acknowledgmentStatus: 'acknowledged',
-      acknowledgmentCompletedAt: new Date().toLocaleString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-      }),
+      acknowledgmentCompletedAt: formatNow(),
       pdfDirtySincePreviousAck: false,
     });
     ackTimers.delete(id);
@@ -101,15 +120,7 @@ export function sendForAck(id: string) {
   if (!doc || !doc.needsAcknowledgment) return;
   patchDocument(id, {
     acknowledgmentStatus: 'sent',
-    acknowledgmentRequestedAt: new Date().toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-    }),
-    acknowledgmentRequestedBy: state.trip.agentName,
-    acknowledgmentLinkToken: `tok-${Date.now()}`,
+    acknowledgmentRequestedAt: formatNow(),
     acknowledgmentCompletedAt: undefined,
   });
   scheduleSimulatedAck(id);
@@ -119,14 +130,7 @@ export function resendAck(id: string) {
   const doc = getDocument(id);
   if (!doc || doc.acknowledgmentStatus !== 'sent') return;
   patchDocument(id, {
-    acknowledgmentRequestedAt: new Date().toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-    }),
-    acknowledgmentLinkToken: `tok-${Date.now()}`,
+    acknowledgmentRequestedAt: formatNow(),
   });
   scheduleSimulatedAck(id);
 }
@@ -149,11 +153,7 @@ export function addDocument(input: AddDocumentInput) {
     fileFormat: input.fileFormat,
     fileSizeKb: input.fileSizeKb,
     uploadedBy: state.trip.agentName,
-    uploadedAt: new Date().toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    }),
+    uploadedAt: formatDateOnly(),
     systemGenerated: false,
     deletableByAgent: true,
     clientFacing: input.clientFacing,
@@ -170,6 +170,11 @@ export function deleteDocument(id: string) {
   if (!doc) return;
   if (!doc.deletableByAgent) {
     throw new Error('Document is not deletable by agent');
+  }
+  const existing = ackTimers.get(id);
+  if (existing) {
+    clearTimeout(existing);
+    ackTimers.delete(id);
   }
   update((s) => ({ ...s, documents: s.documents.filter((d) => d.id !== id) }));
 }
@@ -215,11 +220,7 @@ export function simulateNewBooking() {
         return {
           ...d,
           fileSizeKb: d.fileSizeKb + 42,
-          uploadedAt: new Date().toLocaleString('en-US', {
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric',
-          }),
+          uploadedAt: formatDateOnly(),
           pdfDirtySincePreviousAck: wasAcknowledged ? true : d.pdfDirtySincePreviousAck,
         };
       }),

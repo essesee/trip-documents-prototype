@@ -62,9 +62,7 @@ export type DocumentRecord = {
   needsAcknowledgment: boolean;
   acknowledgmentStatus: AckStatus;
   acknowledgmentRequestedAt?: string;
-  acknowledgmentRequestedBy?: string;
   acknowledgmentCompletedAt?: string;
-  acknowledgmentLinkToken?: string;
   bookingId?: string;
   pdfDirtySincePreviousAck?: boolean;
 };

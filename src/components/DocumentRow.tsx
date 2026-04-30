@@ -121,7 +121,7 @@ export function DocumentRow({ document: doc, onRequestSend, onRequestResend }: P
         </Tooltip>
         <Tooltip label="Render Acknowledge button on consumer side" withArrow>
           <Switch
-            label="Needs ack"
+            label="Needs acknowledgment"
             size="xs"
             checked={doc.needsAcknowledgment}
             onChange={() => toggleNeedsAck(doc.id)}

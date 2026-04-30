@@ -41,7 +41,7 @@ describe('documentStore', () => {
     toggleNeedsAck('doc-2');
     sendForAck('doc-2');
     expect(getDocument('doc-2')!.acknowledgmentStatus).toBe('sent');
-    expect(getDocument('doc-2')!.acknowledgmentLinkToken).toBeTruthy();
+    expect(getDocument('doc-2')!.acknowledgmentRequestedAt).toBeTruthy();
     vi.advanceTimersByTime(3100);
     expect(getDocument('doc-2')!.acknowledgmentStatus).toBe('acknowledged');
     expect(getDocument('doc-2')!.acknowledgmentCompletedAt).toBeTruthy();
@@ -52,14 +52,14 @@ describe('documentStore', () => {
     expect(getDocument('doc-2')!.acknowledgmentStatus).toBe('not_requested');
   });
 
-  it('resendAck refreshes the token and re-arms the simulated ack', () => {
+  it('resendAck refreshes the request timestamp and re-arms the simulated ack', () => {
     const sent = getDocument('doc-6')!;
     expect(sent.acknowledgmentStatus).toBe('sent');
-    const previousToken = sent.acknowledgmentLinkToken;
+    const previousRequestedAt = sent.acknowledgmentRequestedAt;
     resendAck('doc-6');
     const updated = getDocument('doc-6')!;
     expect(updated.acknowledgmentStatus).toBe('sent');
-    expect(updated.acknowledgmentLinkToken).not.toBe(previousToken);
+    expect(updated.acknowledgmentRequestedAt).not.toBe(previousRequestedAt);
     vi.advanceTimersByTime(3100);
     expect(getDocument('doc-6')!.acknowledgmentStatus).toBe('acknowledged');
   });

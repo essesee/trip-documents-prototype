@@ -121,8 +121,6 @@ export const SEED_DOCUMENTS: DocumentRecord[] = [
     needsAcknowledgment: true,
     acknowledgmentStatus: 'sent',
     acknowledgmentRequestedAt: 'Jan 27 2026 9:14 AM',
-    acknowledgmentRequestedBy: 'Kimberly Stevens',
-    acknowledgmentLinkToken: 'tok-cruise-waiver-001',
     bookingId: 'bk-1',
   },
   {
@@ -139,8 +137,6 @@ export const SEED_DOCUMENTS: DocumentRecord[] = [
     needsAcknowledgment: true,
     acknowledgmentStatus: 'acknowledged',
     acknowledgmentRequestedAt: 'Jan 30 2026 2:11 PM',
-    acknowledgmentRequestedBy: 'Kimberly Stevens',
     acknowledgmentCompletedAt: 'Feb 1 2026 6:42 PM',
-    acknowledgmentLinkToken: 'tok-invoice-001',
   },
 ];
