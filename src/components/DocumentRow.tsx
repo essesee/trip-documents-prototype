@@ -23,11 +23,12 @@ import {
   toggleClientFacing,
   toggleNeedsAck,
 } from '../state/documentStore';
-import type { DocumentRecord } from '../types';
+import type { Booking, DocumentRecord } from '../types';
 import { OpenQuestionPopover } from './OpenQuestionPopover';
 
 type Props = {
   document: DocumentRecord;
+  bookings: Booking[];
   onRequestSend: (doc: DocumentRecord) => void;
   onRequestResend: (doc: DocumentRecord) => void;
   onRequestReassign: (doc: DocumentRecord) => void;
@@ -66,11 +67,13 @@ function StatusBadge({ doc }: { doc: DocumentRecord }) {
 
 export function DocumentRow({
   document: doc,
+  bookings,
   onRequestSend,
   onRequestResend,
   onRequestReassign,
 }: Props) {
   const isSystem = doc.systemGenerated;
+  const attachedBooking = doc.bookingId ? bookings.find((b) => b.id === doc.bookingId) : undefined;
   return (
     <Box
       style={{
@@ -110,6 +113,25 @@ export function DocumentRow({
           <Text size="xs" c="dimmed">
             {doc.fileFormat} &middot; {formatSize(doc.fileSizeKb)}
           </Text>
+        </Group>
+        <Group gap={6} wrap="nowrap">
+          {attachedBooking ? (
+            <>
+              <Text size="xs" c="dimmed">
+                Attached to
+              </Text>
+              <Badge variant="light" color="blue" size="xs">
+                {attachedBooking.productType}
+              </Badge>
+              <Text size="xs" fw={500}>
+                {attachedBooking.label}
+              </Text>
+            </>
+          ) : (
+            <Text size="xs" c="dimmed" fs="italic">
+              Trip-level
+            </Text>
+          )}
         </Group>
       </Stack>
 

@@ -10,6 +10,15 @@ function renderRow(doc: DocumentRecord) {
     <MantineProvider>
       <DocumentRow
         document={doc}
+        bookings={[
+          {
+            id: 'bk-1',
+            productType: 'Cruise',
+            label: 'Test Cruise',
+            startDate: 'Feb 5 2026',
+            endDate: 'Feb 12 2026',
+          },
+        ]}
         onRequestSend={() => {}}
         onRequestResend={() => {}}
         onRequestReassign={() => {}}
@@ -87,5 +96,17 @@ describe('DocumentRow', () => {
     });
     expect(screen.getByText('Auto-generated')).toBeInTheDocument();
     expect(screen.getByLabelText('Open question Q12')).toBeInTheDocument();
+  });
+
+  it('shows Trip-level when no booking is attached', () => {
+    renderRow(baseDoc);
+    expect(screen.getByText('Trip-level')).toBeInTheDocument();
+  });
+
+  it('shows the booking product type and label when a booking is attached', () => {
+    renderRow({ ...baseDoc, bookingId: 'bk-1' });
+    expect(screen.getByText('Attached to')).toBeInTheDocument();
+    expect(screen.getByText('Cruise')).toBeInTheDocument();
+    expect(screen.getByText('Test Cruise')).toBeInTheDocument();
   });
 });

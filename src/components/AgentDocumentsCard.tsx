@@ -77,6 +77,7 @@ export function AgentDocumentsCard() {
             <DocumentRow
               key={doc.id}
               document={doc}
+              bookings={bookings}
               onRequestSend={(d) => setSendTarget(d)}
               onRequestResend={(d) => setResendTarget(d)}
               onRequestReassign={(d) => setReassignTarget(d)}
