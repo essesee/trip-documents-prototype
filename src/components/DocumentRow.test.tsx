@@ -72,7 +72,7 @@ describe('DocumentRow', () => {
     expect(screen.getByText('Acknowledged')).toBeInTheDocument();
   });
 
-  it('shows the Auto-generated badge for system-generated rows and disables Delete', () => {
+  it('shows the Auto-generated badge and the Q12 callout for system-generated rows', () => {
     renderRow({
       ...baseDoc,
       systemGenerated: true,
@@ -81,7 +81,6 @@ describe('DocumentRow', () => {
       uploadedBy: 'System',
     });
     expect(screen.getByText('Auto-generated')).toBeInTheDocument();
-    const disabledDelete = screen.getByLabelText('Delete disabled');
-    expect(disabledDelete).toBeDisabled();
+    expect(screen.getByLabelText('Open question Q12')).toBeInTheDocument();
   });
 });

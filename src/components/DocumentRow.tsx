@@ -69,7 +69,7 @@ export function DocumentRow({ document: doc, onRequestSend, onRequestResend }: P
     <Box
       style={{
         display: 'grid',
-        gridTemplateColumns: '40px minmax(220px, 1.4fr) minmax(150px, 0.9fr) 1fr 220px 200px 40px',
+        gridTemplateColumns: '40px minmax(220px, 1.4fr) minmax(150px, 0.9fr) 1fr 220px 40px',
         alignItems: 'center',
         gap: 12,
         padding: '12px 16px',
@@ -82,12 +82,19 @@ export function DocumentRow({ document: doc, onRequestSend, onRequestResend }: P
       </ThemeIcon>
 
       <Stack gap={2}>
-        <Group gap={6}>
+        <Group gap={6} wrap="nowrap">
           <Text fw={600}>{doc.fileName}</Text>
           {isSystem && (
-            <Badge color="blue" variant="light" size="xs">
-              Auto-generated
-            </Badge>
+            <>
+              <Badge color="blue" variant="light" size="xs">
+                Auto-generated
+              </Badge>
+              <OpenQuestionPopover
+                questionId="Q12"
+                title="Trip Confirmation deletability"
+                body="PRD currently treats the auto-generated Trip Confirmation PDF as non-deletable so the audit trail stays intact. Confirm with the advisory group whether any club needs an exception."
+              />
+            </>
           )}
         </Group>
         <Group gap={6}>
@@ -131,45 +138,6 @@ export function DocumentRow({ document: doc, onRequestSend, onRequestResend }: P
 
       <Group gap={6}>
         <StatusBadge doc={doc} />
-        {doc.needsAcknowledgment && doc.acknowledgmentStatus === 'not_requested' && (
-          <ActionIcon variant="light" color="blue" onClick={() => onRequestSend(doc)} aria-label="Send for ack">
-            <IconSend size={16} />
-          </ActionIcon>
-        )}
-        {doc.acknowledgmentStatus === 'sent' && (
-          <ActionIcon
-            variant="light"
-            color="yellow"
-            onClick={() => onRequestResend(doc)}
-            aria-label="Resend ack"
-          >
-            <IconRefresh size={16} />
-          </ActionIcon>
-        )}
-      </Group>
-
-      <Group gap={6} wrap="nowrap" justify="flex-end">
-        <ActionIcon variant="light" color="blue" aria-label="Download">
-          <IconDownload size={16} />
-        </ActionIcon>
-        {doc.deletableByAgent ? (
-          <ActionIcon variant="light" color="red" onClick={() => deleteDocument(doc.id)} aria-label="Delete">
-            <IconTrash size={16} />
-          </ActionIcon>
-        ) : (
-          <Group gap={2} wrap="nowrap">
-            <Tooltip label="Trip Confirmation cannot be deleted (PRD)">
-              <ActionIcon variant="light" color="gray" disabled aria-label="Delete disabled">
-                <IconTrash size={16} />
-              </ActionIcon>
-            </Tooltip>
-            <OpenQuestionPopover
-              questionId="Q12"
-              title="Trip Confirmation deletability"
-              body="PRD currently treats the auto-generated Trip Confirmation PDF as non-deletable so the audit trail stays intact. Confirm with the advisory group whether any club needs an exception."
-            />
-          </Group>
-        )}
       </Group>
 
       <Menu position="bottom-end" withArrow shadow="md">
