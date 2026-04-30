@@ -9,6 +9,7 @@ import {
 import type { DocumentRecord } from '../types';
 import { DocumentRow } from './DocumentRow';
 import { ReAckBanner } from './ReAckBanner';
+import { ReassignScopeModal } from './ReassignScopeModal';
 import { ResendAckModal } from './ResendAckModal';
 import { SendForAckModal } from './SendForAckModal';
 import { UploadModal } from './UploadModal';
@@ -21,6 +22,7 @@ export function AgentDocumentsCard() {
   const [uploadOpen, setUploadOpen] = useState(false);
   const [sendTarget, setSendTarget] = useState<DocumentRecord | null>(null);
   const [resendTarget, setResendTarget] = useState<DocumentRecord | null>(null);
+  const [reassignTarget, setReassignTarget] = useState<DocumentRecord | null>(null);
 
   const tripConfirmation = documents.find((d) => d.systemSubtype === 'trip_confirmation');
   const showReAckBanner =
@@ -77,6 +79,7 @@ export function AgentDocumentsCard() {
               document={doc}
               onRequestSend={(d) => setSendTarget(d)}
               onRequestResend={(d) => setResendTarget(d)}
+              onRequestReassign={(d) => setReassignTarget(d)}
             />
           ))}
         </Box>
@@ -85,6 +88,11 @@ export function AgentDocumentsCard() {
       <UploadModal opened={uploadOpen} onClose={() => setUploadOpen(false)} bookings={bookings} />
       <SendForAckModal document={sendTarget} trip={trip} onClose={() => setSendTarget(null)} />
       <ResendAckModal document={resendTarget} onClose={() => setResendTarget(null)} />
+      <ReassignScopeModal
+        document={reassignTarget}
+        bookings={bookings}
+        onClose={() => setReassignTarget(null)}
+      />
     </Box>
   );
 }

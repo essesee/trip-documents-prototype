@@ -4,6 +4,7 @@ import {
   deleteDocument,
   getDocument,
   getState,
+  reassignScope,
   resendAck,
   resetStoreForTests,
   sendForAck,
@@ -86,6 +87,14 @@ describe('documentStore', () => {
     deleteDocument('doc-2');
     expect(getState().documents.length).toBe(beforeCount - 1);
     expect(() => deleteDocument('doc-1')).toThrow();
+  });
+
+  it('reassignScope moves a document to a booking and back to trip-level', () => {
+    expect(getDocument('doc-2')!.bookingId).toBeUndefined();
+    reassignScope('doc-2', 'bk-1');
+    expect(getDocument('doc-2')!.bookingId).toBe('bk-1');
+    reassignScope('doc-2', undefined);
+    expect(getDocument('doc-2')!.bookingId).toBeUndefined();
   });
 
   it('addDocument appends a row with provided defaults', () => {

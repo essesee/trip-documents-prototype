@@ -165,6 +165,12 @@ export function addDocument(input: AddDocumentInput) {
   return newDoc;
 }
 
+export function reassignScope(id: string, bookingId: string | undefined) {
+  const doc = getDocument(id);
+  if (!doc) return;
+  patchDocument(id, { bookingId });
+}
+
 export function deleteDocument(id: string) {
   const doc = getDocument(id);
   if (!doc) return;
@@ -179,21 +185,24 @@ export function deleteDocument(id: string) {
   update((s) => ({ ...s, documents: s.documents.filter((d) => d.id !== id) }));
 }
 
-const SIMULATED_BOOKING_ADDITIONS = [
+const SIMULATED_BOOKING_ADDITIONS: Booking[] = [
   {
     id: 'bk-sim-1',
+    productType: 'Activity',
     label: 'Cozumel Catamaran Snorkel',
     startDate: 'Feb 7 2026',
     endDate: 'Feb 7 2026',
   },
   {
     id: 'bk-sim-2',
+    productType: 'Activity',
     label: 'Grand Cayman Stingray City',
     startDate: 'Feb 9 2026',
     endDate: 'Feb 9 2026',
   },
   {
     id: 'bk-sim-3',
+    productType: 'Other',
     label: 'Princess Premier Beverage Package',
     startDate: 'Feb 5 2026',
     endDate: 'Feb 12 2026',
@@ -201,12 +210,14 @@ const SIMULATED_BOOKING_ADDITIONS = [
 ];
 
 export function simulateNewBooking() {
-  const next = SIMULATED_BOOKING_ADDITIONS[state.bookings.length - SEED_BOOKINGS.length] ?? {
-    id: `bk-sim-${Date.now()}`,
-    label: 'Additional booking',
-    startDate: 'Feb 8 2026',
-    endDate: 'Feb 8 2026',
-  };
+  const next: Booking =
+    SIMULATED_BOOKING_ADDITIONS[state.bookings.length - SEED_BOOKINGS.length] ?? {
+      id: `bk-sim-${Date.now()}`,
+      productType: 'Other',
+      label: 'Additional booking',
+      startDate: 'Feb 8 2026',
+      endDate: 'Feb 8 2026',
+    };
   update((s) => {
     const tripConfirmation = s.documents.find(
       (d) => d.systemSubtype === 'trip_confirmation',

@@ -8,7 +8,12 @@ import { DocumentRow } from './DocumentRow';
 function renderRow(doc: DocumentRecord) {
   return render(
     <MantineProvider>
-      <DocumentRow document={doc} onRequestSend={() => {}} onRequestResend={() => {}} />
+      <DocumentRow
+        document={doc}
+        onRequestSend={() => {}}
+        onRequestResend={() => {}}
+        onRequestReassign={() => {}}
+      />
     </MantineProvider>,
   );
 }

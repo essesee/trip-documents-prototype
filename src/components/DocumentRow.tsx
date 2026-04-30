@@ -30,6 +30,7 @@ type Props = {
   document: DocumentRecord;
   onRequestSend: (doc: DocumentRecord) => void;
   onRequestResend: (doc: DocumentRecord) => void;
+  onRequestReassign: (doc: DocumentRecord) => void;
 };
 
 function formatSize(kb: number): string {
@@ -63,7 +64,12 @@ function StatusBadge({ doc }: { doc: DocumentRecord }) {
   }
 }
 
-export function DocumentRow({ document: doc, onRequestSend, onRequestResend }: Props) {
+export function DocumentRow({
+  document: doc,
+  onRequestSend,
+  onRequestResend,
+  onRequestReassign,
+}: Props) {
   const isSystem = doc.systemGenerated;
   return (
     <Box
@@ -158,7 +164,7 @@ export function DocumentRow({ document: doc, onRequestSend, onRequestResend }: P
               Resend acknowledgment
             </Menu.Item>
           )}
-          <Menu.Item disabled>Reassign scope</Menu.Item>
+          <Menu.Item onClick={() => onRequestReassign(doc)}>Reassign scope</Menu.Item>
           {doc.deletableByAgent && (
             <Menu.Item color="red" leftSection={<IconTrash size={14} />} onClick={() => deleteDocument(doc.id)}>
               Delete

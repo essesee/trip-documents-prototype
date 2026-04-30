@@ -27,8 +27,21 @@ export type AckStatus = 'not_requested' | 'sent' | 'acknowledged';
 
 export type FileFormat = 'PDF' | 'DOC' | 'DOCX' | 'XLS' | 'XLSX' | 'JPG' | 'JPEG' | 'PNG' | 'EML' | 'MSG';
 
+export type BookingProductType =
+  | 'Cruise'
+  | 'Accommodation'
+  | 'Activity'
+  | 'Air'
+  | 'Rail'
+  | 'Car'
+  | 'Guided Tour'
+  | 'Prepackage'
+  | 'Insurance'
+  | 'Other';
+
 export type Booking = {
   id: string;
+  productType: BookingProductType;
   label: string;
   startDate: string;
   endDate: string;

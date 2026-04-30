@@ -16,18 +16,21 @@ export const SEED_TRIP: Trip = {
 export const SEED_BOOKINGS: Booking[] = [
   {
     id: 'bk-1',
+    productType: 'Cruise',
     label: 'Princess Caribbean Cruise',
     startDate: 'Feb 5 2026',
     endDate: 'Feb 12 2026',
   },
   {
     id: 'bk-2',
+    productType: 'Accommodation',
     label: 'Hyatt Regency Miami pre-cruise',
     startDate: 'Feb 4 2026',
     endDate: 'Feb 5 2026',
   },
   {
     id: 'bk-3',
+    productType: 'Activity',
     label: 'Disney Springs activity',
     startDate: 'Feb 4 2026',
     endDate: 'Feb 4 2026',
