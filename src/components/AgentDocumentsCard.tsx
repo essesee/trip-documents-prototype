@@ -60,7 +60,7 @@ export function AgentDocumentsCard() {
               What if a booking is added?
             </Button>
             <Button variant="white" color="blue" leftSection={<IconFilePlus size={16} />}>
-              Create Proposal
+              Create Quote
             </Button>
             <Button
               color="blue"
